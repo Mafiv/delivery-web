@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shopping</title>
+    <style>
+        .product-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            float: left;
+            transition: border-radius 0.3s ease, box-shadow 0.3s ease; /* Add transition effect */
+        }
+
+        .product-box img {
+            width: 100%;
+            height: auto;
+        }
+
+        .product-box .rating {
+            color: #ffcc00;
+        }
+
+        .product-box button {
+            display: block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .product-box button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Add hover effect */
+        .product-box:hover {
+            border-radius: 15px; /* Increased border radius on hover */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add box shadow on hover */
+        }
+
+        /* Pop-up effect */
+        .product-box.pop-up {
+            transform: scale(1.1); /* Scale up the product box */
+            z-index: 1; /* Ensure it's above other boxes */
+        }
+    </style>
+</head>
+<body>
+    <div id="product-container">
+        <!-- Boxes will be dynamically added here -->
+    </div>
+
+    <script>
+        // Sample product data
+        const products = [
+            {
+                name: "Product 1",
+                image: "product1.jpg",
+                price: "$10.99",
+                rating: 4.5 // Rating out of 5
+            },
+            {
+                name: "Product 2",
+                image: "product2.jpg",
+                price: "$19.99",
+                rating: 4.2 // Rating out of 5
+            },
+            // Add more product objects as needed
+        ];
+
+        // Function to create product boxes
+        function createProductBox(product) {
+            const box = document.createElement('div');
+            box.classList.add('product-box');
+
+            // Add image
+            const img = document.createElement('img');
+            img.src = product.image;
+            box.appendChild(img);
+
+            // Add product name
+            const name = document.createElement('h3');
+            name.textContent = product.name;
+            box.appendChild(name);
+
+            // Add price
+            const price = document.createElement('p');
+            price.textContent = `Price: ${product.price}`;
+            box.appendChild(price);
+
+            // Add rating
+            const rating = document.createElement('p');
+            rating.classList.add('rating');
+            rating.textContent = 'Rating: ';
+            const stars = document.createElement('span');
+            stars.innerHTML = '&#9733;'.repeat(product.rating) + '&#9734;'.repeat(5 - product.rating);
+            rating.appendChild(stars);
+            box.appendChild(rating);
+
+            // Add "Add to Cart" button (You can add event listeners to handle adding to cart)
+            const addToCartBtn = document.createElement('button');
+            addToCartBtn.textContent = "Add to Cart";
+            box.appendChild(addToCartBtn);
+
+            // Add box to the container
+            document.getElementById('product-container').appendChild(box);
+        }
+
+        // Function to handle mouse movement for pop-up effect
+        function handleMouseMove(event) {
+            const productBoxes = document.querySelectorAll('.product-box');
+            productBoxes.forEach(box => {
+                const rect = box.getBoundingClientRect();
+                const mouseX = event.clientX;
+                const mouseY = event.clientY;
+                const isClose = mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom;
+                if (isClose) {
+                    box.classList.add('pop-up');
+                } else {
+                    box.classList.remove('pop-up');
+                }
+            });
+        }
+
+        // Function to generate product boxes for all products
+        function generateProductBoxes() {
+            products.forEach(product => {
+                createProductBox(product);
+            });
+        }
+
+        // Call the function to generate product boxes when the page loads
+        window.onload = function() {
+            generateProductBoxes();
+            // Add mousemove event listener to the document
+            document.addEventListener('mousemove', handleMouseMove);
+        };
+    </script>
+</body>
+</html>

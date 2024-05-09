@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fastest Delivery</title>
+        <link rel="stylesheet" href="style.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    </head>
+    <body>
+        <header class="Logoo" >
+
+            <div class="logo">SMART.</div>
+        
+            <div class="search-bar">
+             <input type="text" placeholder="Search here"/>
+             <button>Search</button>
+            </div>
+        
+            <div class="menu-header-icon">
+        
+                 <div class="wishlist-icon">
+                   <a href="#"><img src="heart.png" alt="" /></a>
+                   <span class="badge">2</span><br/>
+                   <p>Your Wishlist </p>
+                 </div>
+            
+                 <div class="Your-Cart-icon">
+                   <a href=""><img src="cart.png" alt="" /></a>
+                   <span class="badge">3</span> <br/> 
+                   <p>Your Cart</p>  
+                 </div>
+            </div>  
+       </header>  
+          <div class="hero">
+            <nav>
+                <ul>
+                    <li><a href="#" class="hom">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Cart</a></li>
+                    <li><a href="#">Wishlist</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+                <img src="profile/user.png" class="user-pic" onclick="toggleMenu()">
+                <div class="sub-menu-wrap" id="subMenu">
+                    <div class="sub-menu">
+                      <div class="user-info">
+                        <img src="profile/user.png" alt="">
+                        <h2>James Dagi</h2>
+                      </div>
+                      <hr>
+                      <a href="#" class="sub-menu-link">
+                        <img src="profile/setting.png" >
+                        <p>Settings & Privacy</p>   
+                        <span>></span>
+                      </a>
+                      <a href="#" class="sub-menu-link">
+                        <img src="profile/help.png" >
+                        <p>Help & Support</p>
+                        <span>></span>
+                      </a>
+                      <a href="#" class="sub-menu-link">
+                        <img src="profile/profile.png" >
+                        <p>Edit Profile</p>
+                        <span>></span>
+                      </a>
+                      <a href="#" class="sub-menu-link">
+                        <img src="profile/logout.png" >
+                        <p>Logout</p>
+                        <span>></span>
+                      </a>
+                    </div>     
+                </div>
+            </nav>
+           
+           <div> 
+
+          <div class="top">
+             <img src="top_image.webp" alt="" />
+          </div> 
+
+            <div class="navbar2">
+             <h1>New Products</h1>
+
+            </div>
+            <div id="product-container" class="productContainer"></div>      
+            <script src="Product-script.js"></script>
+            <script>
+              let subMenu = document.getElementById("subMenu");
+      
+              function toggleMenu(){
+                  subMenu.classList.toggle("open-menu");
+              }
+          </script> 
+
+    </body>
