@@ -1,100 +1,84 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "signup_db";
+// Database connection details
+require_once 'database_connection.php';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fullname = $_POST['fullname'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    // Get the form data
+    $fullname = $_POST["fullname"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $password = $_POST["password"];
+    $confirm_password = $_POST["confirm-password"];
 
-    // Handle file upload
-    $target_dir = "profile_images/";
-    $target_file = $target_dir . basename($_FILES["profile-photo"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-    // Check if image file is a actual image or fake image
-    if (isset($_POST["submit"])) {
-        $check = getimagesize($_FILES["profile-photo"]["tmp_name"]);
-        if ($check !== false) {
-            $uploadOk = 1;
-        } else {
-            echo "<script>alert('File is not an image.');
-            window.location.href = 'signup.php';
-            </script>";
-            $uploadOk = 0;
-        }
-    }
-
-    // Check if file already exists
-    if (file_exists($target_file)) {
-        echo "<script>alert('Sorry, file already exists.');
-        window.location.href = 'signup.php';
-        </script>";
-        $uploadOk = 0;
-    }
-
-    // Check file size
-    if ($_FILES["profile-photo"]["size"] > 500000) {
-        echo "<script>alert('Sorry, your file is too large.');
-        window.location.href = 'signup.php';
-        </script>";
-        $uploadOk = 0;
-    }
-
-    // Allow certain file formats
-    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif") {
-        echo "<script>alert('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');
-        window.location.href = 'signup.php';
-        </script>";
-        $uploadOk = 0;
-    }
-
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-        echo "<script>alert('Sorry, your file was not uploaded.');
-        window.location.href = 'signup.php';
-        </script>";        
-        // if everything is ok, try to upload file
+    // Validate the form data
+    if (empty($fullname) || empty($email) || empty($phone) || empty($password) || empty($confirm_password)) {
+        $error_message = "Please fill in all the required fields.";
+        echo "<script>alert('$error_message');</script>";
+    } elseif ($password !== $confirm_password) {
+        $error_message = "Passwords do not match.";
+        echo "<script>alert('$error_message');</script>";
     } else {
-        if (move_uploaded_file($_FILES["profile-photo"]["tmp_name"], $target_file)) {
-            // echo "The file " . basename($_FILES["profile-photo"]["name"]) . " has been uploaded.";
+        // Check if the email is unique
+        $stmt = $db->prepare("SELECT COUNT(*) FROM customer WHERE gmail = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->bind_result($email_count);
+        $stmt->fetch();
+        $stmt->close();
 
-            // Insert user into the database
-            $stmt = $conn->prepare("INSERT INTO users (fullname, email, phone, username, password, profile_photo_path) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssss", $fullname, $email, $phone, $username, $password, $target_file);
+        if ($email_count > 0) {
+            $error_message = "Email already exists.";
+            echo "<script>alert('$error_message');</script>";
+        } else {
+            // Prepare the SQL query
+            $stmt = $db->prepare("INSERT INTO customer (full_name, gmail, phone_number, user_password) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $fullname, $email, $phone, $password);
 
+            // Execute the query
             if ($stmt->execute()) {
-                echo "<script>alert('Registered successfully!');
-                window.location.href = 'login.php';
-                </script>";;
+                // Redirect the user to the login page or display a success message
+                header("Location: /login");
+                exit;
             } else {
-                echo "<script>alert('Please try again');
-                window.location.href = 'signup.php';
-                </script>";
+                $error_message = "Error saving user data: " . $stmt->error;
+                echo "<script>alert('$error_message');</script>";
             }
 
             $stmt->close();
-        } else {
-            echo "<script>alert('Sorry, there was an error uploading your file.');
-            window.location.href = 'signup.php';
-            </script>";            
         }
     }
 }
-
-$conn->close();
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="./css/Signup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sign Up</h1>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+            <label for="fullname">Full Name:</label>
+            <input type="text" id="fullname" name="fullname" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+
+            <input type="submit" value="Sign Up">
+        </form>
+        <p>Already have an account? <a href="/delivery-web/login.php">Login here</a></p>
+    </div>
+</body>
+</html>

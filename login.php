@@ -1,31 +1,25 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "signup_db";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+require_once 'database_connection.php';
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     // Fetch user data
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE username=?");
-    $stmt->bind_param("s", $username);
+    $stmt = $db->prepare("SELECT id FROM customer WHERE gmail=? and user_password=?");
+    $stmt->bind_param("ss", $username, $password);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($id, $plain_text_password);
-        $stmt->fetch();
-        
+        header("Location: index.php");
+        exit;
+        /*
+        // $stmt->bind_result($id, $plain_text_password);
+        // $stmt->fetch();
         // Verify password
         if ($password === $plain_text_password) {
             // Password is correct, redirect to profile-view.php with the username parameter
@@ -38,21 +32,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $error = "Username does not exist.";
     }
-
+*/
     $stmt->close();
 $user_name = $username;
 }
+else{
+    header("Location: upload_item.php");
+    exit;
 
-$conn->close();
+}}
+
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="Login.css">
+    <link rel="stylesheet" href="./css/Login.css">
 </head>
 <body>
     <div class="container">
@@ -71,7 +68,7 @@ $conn->close();
             <?php endif; ?>
         </form>
         <!-- <p>Forgot your password? <a href="/forgot-password">Click here</a></p> -->
-        <p>Don't have an account? <a href="Signup.html">Register here</a></p>  
+        <p>Don't have an account? <a href="/delivery-web/Signup.php">Register here</a></p>  
     </div>
 </body>
 </html>

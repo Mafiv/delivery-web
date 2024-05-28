@@ -76,6 +76,15 @@ if (!isset($_SESSION['clickedButtonIds'])) {
                    <span class="badge">3</span> <br/> 
                    <p>Your Cart</p>  
                  </div>
+
+                 <div class="Your-Cart-icon">
+                   <a href="cart.php"><img src="./images/cart.png" alt="" /></a>
+                   <span class="badge">3</span> <br/> 
+                   <p>Your Cart</p>  
+                 </div>
+
+                 
+
             </div>  
        </header>  
            <div class="navbar1">
@@ -128,13 +137,12 @@ if (!isset($_SESSION['clickedButtonIds'])) {
 
             let c=cartBadge.value;
         
-        var xhr = new XMLHttpRequest();
-        var ajaxUrl = 'store_cart_data.php';
-        xhr.open("POST", ajaxUrl, true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        
-        xhr.send("productId=" + productId + "&quantityValue=" + c);
-        <?php $_SESSION['cartData'] = array();?>
+            var xhr = new XMLHttpRequest();
+            var ajaxUrl = 'store_cart_data.php';
+            xhr.open("POST", ajaxUrl, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("productId=" + productId + "&quantityValue=" + c);
+            <?php $_SESSION['cartData'] = array();?>
         }
 
         function addToWish(productId){

@@ -164,18 +164,7 @@ if (isset($_SESSION['cartData'])) {
             <script>
 
 
-/*
-    function remove(productId){
-        // $a=productId;
-        console.log(4);
-    //     <?php 
-    //    unset($_SESSION['cartData']['13']);
-    //    $_SESSION['a'] = $_SESSION['cartData'];
-    //     ?>
-        location.reload();
-    ;}
 
-*/
 
     function handleMouseMove(event) {
         const productBoxes = document.querySelectorAll('.product-box');
