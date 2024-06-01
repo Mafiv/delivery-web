@@ -85,7 +85,7 @@ if (isset($_SESSION['wishData'])) {
         
             <div class="search-bar">
              <input type="text" placeholder="Search here"/>
-             <button>Search</button>
+             <button onclick="performSearch()">Search</button>
             </div>
         
             <div class="menu-header-icon">
@@ -104,7 +104,7 @@ if (isset($_SESSION['wishData'])) {
             </div>  
        </header>  
            <div class="navbar1">
-               <a href="index.php" class="hom">Home</a>
+               <a href="homepage.php" class="hom">Home</a>
                <a href="about.php">About</a>
                <a href="cart.php">Cart</a>
                <a href="wishlist.php">Wishlist</a>
@@ -157,9 +157,6 @@ if (isset($_SESSION['wishData'])) {
                 
             
     
-        
-
-                
                 
             <?php }?>
     
@@ -206,6 +203,7 @@ if (isset($_SESSION['wishData'])) {
             }
         });
     }
+    
 
     document.addEventListener('mousemove', handleMouseMove);
 </script>

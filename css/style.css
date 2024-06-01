@@ -53,6 +53,8 @@ body {
   vertical-align: middle;
   /* margin-right: 30px; */
 }
+
+
 .wishlist-icon p{
   font-size: small;
 }
@@ -81,7 +83,7 @@ body {
   margin-right: 10px;
   font-size: large;
   border-radius: 25px;
-  width: 600px;
+  width: 500px;
 }
 .search-bar button {
   padding: 5px 15px;
@@ -115,12 +117,13 @@ body {
 }
 .sub-menu-wrap {
   position: absolute;
-  top: 100%;
-  right: 10%;
+  top: 80px;
+  right: 1rem;
   width: 320px;
   max-height: 0px;
   overflow: hidden;
   transition: max-height 0.5s;
+  background-color: cadetblue;
 
 }
 
@@ -374,3 +377,4 @@ nav{
 .product-box .rating {
   margin-top: 5px; 
 }
+

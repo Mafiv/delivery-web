@@ -11,8 +11,14 @@
   $email = $user_data['gmail'];
   $phone_number = $user_data['phone_number'];
   $password = $user_data['user_password'];
+  $img_url=$user_data['image_url'];
 
-  $sql = "select * from delivery_items order by id DESC";
+  if (!isset($term)) {
+    $term = isset($_GET['term']) ? $_GET['term'] : '';  
+}
+
+$sql = "SELECT * FROM delivery_items WHERE item_name LIKE '%$term%' ORDER BY id DESC";
+
   $result = $db->query($sql);
 
   function createProductBox($product)
@@ -64,41 +70,43 @@
       <body>
           <header class="Logoo" >
 
-              <div class="logo">SMART.</div>
-          
+              <!-- <div class="logo">SMART.</div> -->
+              <p>SMART delivery </p>
               <div class="search-bar">
-              <input type="text" placeholder="Search here"/>
-              <button>Search</button>
+              <input id="searhing_term"type="text" placeholder="Search here"/>
+              <button  onclick="performSearch()" >Search</button>
               </div>
           
               <div class="menu-header-icon">
           
                   <div class="wishlist-icon">
-                    <a href="wishlist.php"><img src="./images/heart.png" alt="" /></a>
-                    <span class="badge">2</span><br/>
+                    <a href="store_wish_data.php"><img src="./images/heart.png" alt="" /></a>
                     <p>Your Wishlist </p>
                   </div>
               
                   <div class="Your-Cart-icon">
-                    <a href="cart.php"><img src="./images/cart.png" alt="" /></a>
-                    <span class="badge">3</span> <br/> 
+                    <a href="store_cart_data.php"><img src="./images/cart.png" alt="" /></a>
                     <p>Your Cart</p>  
                   </div>
 
                   <div class="Your-Cart-icon">
-                  <img src="./images/user_profile.png" class="user-pic" onclick="toggleMenu()">
-    <span class="badge">3</span> <br />
+                   <a href="privious_cart.php"><img src="./images/cart.png" alt="" /></a> 
+                   <p>privous carts</p>  
+                 </div>
+
+                  <div class="Your-Cart-icon" onclick="toggleMenu()">
+                  <img src=".<?php echo $img_url; ?>"  class="user-pic" >
     <p>Profile</p>
   </div>
 
   <div class="sub-menu-wrap" id="subMenu">
                       <div class="sub-menu">
                         <div class="user-info">
-                          <img src="profile/user.png" alt="">
+                        <img src=".<?php echo $img_url; ?>" alt="">
                           <h2><?php echo $full_name ?></h2>
                         </div>
                         <hr>
-                        <a href="#" class="sub-menu-link">
+                        <a href="./help_support.php" class="sub-menu-link">
                           <img src="profile/help.png" >
                           <p>Help & Support</p>
                           <span>></span>
@@ -108,147 +116,22 @@
                           <p>Edit Profile</p>
                           <span>></span>
                         </a>
-                        <a href="#" class="sub-menu-link">
+                        <a href="./index.php" class="sub-menu-link">
                           <img src="profile/logout.png" >
                           <p>Logout</p>
                           <span>></span>
                         </a>
                       </div>     
                   </div>
-  <style>
-
-    *{
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      box-sizing: border-box;
-  }
-
-  .hero{
-      width: 100%;
-      min-height: 100vh;
-      padding: 10px 0;
-
-      
-  }
-  nav{
-      background-color: white;
-      border-bottom: 4px solid rgb(216, 216, 216);   
-      width: 100%;
-      padding: 10px 10%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      background: rgb(190, 187, 187);
-  }
-  .logo{
-    width: 120px;
-  }
-  .user-pic{
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      cursor: pointer;
-      align-items: center;
-  }
-  nav ul{
-      width: 100%;
-      padding-left: 110px;
-  }
-  nav ul li{
-      display: inline-block;
-      list-style: none;
-      margin: 10px 20px;
-  }
-  .hero .hom{
-      text-decoration: underline;
-    }
-
-  .hero a{
-      color: #201a1a;
-      text-decoration: none; 
-  }
-  .hero a:hover {
-      color: red;
-  }
-  .sub-menu-wrap {
-      position: absolute;
-      top: 15%;
-      right: 0%;
-      width: 320px;
-      max-height: 0px;
-      overflow: hidden;
-      transition: max-height 0.5s;
-
-  }
-  .sub-menu-wrap.open-menu{
-      max-height: 400px;
-      
-  }
-  .sub-menu{
-      background: #fff;
-      padding: 20px;
-      margin: 10px;
-  }
-  .user-info{
-    display: flex;
-    align-items: center;
-  }
-  .user-info h2{
-    font-weight: 500;
-
-  }
-  .user-info img{
-    width: 60px;
-    border-radius: 50%;
-    margin-right: 15px;
-  }
-  .sub-menu hr{
-      border: 0;
-      height: 1px;
-      width: 100%;
-      background: #ccc;
-      margin: 15px 0 10px;
-  }
-  .sub-menu-link{
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: black;
-      margin: 12px 0;
-  }
-  .sub-menu-link p {
-      width: 100%;
-      color: #525252;
-      padding-left: 10px;
-  }
-  .sub-menu-link img{
-      width: 40px;
-      background: #e5e5e5;
-      border-radius: 50%;
-      padding: 8px;
-      margin-left: 15px;
-  }
-  .sub-menu-link span{
-      font-size: 15px;
-      color: #525252;
-      transition: transform 0.5s;
-  }
-  .sub-menu-link:hover span {
-      transform: translatex(5px);
-  }
-  .sub-menu-link:hover p{
-      font-weight: 600;
-  }
-  </style>
+  
+  
 
                   
 
               </div>  
         </header>  
             <div class="navbar1">  
-                <a href="index.php" class="hom">Home</a>
+                <a href="homepage.php" class="hom">Home</a>
                 <a href="about.php">About</a>
                 <a href="cart.php">Cart</a>
                 <a href="wishlist.php">Wishlist</a>
@@ -258,32 +141,33 @@
             </div>    
 
             <div class="top">
-              <img src="./images/top_image.webp" alt="" />
-            </div> 
+             <img src="./images/top_image.webp" alt="" />
+          </div> 
 
-              <div class="navbar2">
-              <h1>New Products</h1><br><br>
+            <div class="navbar2">
+             <h1>New Products</h1><br><br>
 
-              </div>
-              <div id="product-container" class="productContainer"></div>    
-              
-              <?php if($result->num_rows>0){?>
-              
-              <?php while($row=$result->fetch_assoc()){?>
+            </div>
+            <div id="product-container" class="productContainer"></div>    
+            
+            <?php if($result->num_rows>0){?>
+            
+            <?php while($row=$result->fetch_assoc()){?>
 
-                  <div class="img_box">
-                  <?php
-                  echo createProductBox($row);
-                  ?>
-                  </div>
-                  
-              <?php }?>
-      
-              <?php } 
-              else{?>
-              <p>image not found</p>
-      
-              <?php }?>
+                <div class="img_box">
+                <?php
+                echo createProductBox($row);
+                ?>
+                </div>
+                
+            <?php }?>
+    
+            <?php } 
+            else{?>
+            <p>image not found</p>
+    
+            <?php }?>
+
 
       <!-- <script type="text/javascript" src="./script.js"></script> -->
       
@@ -323,13 +207,19 @@
               
           }
 
+          function performSearch() {
+  
+            var searchTerm = document.getElementById("searhing_term").value;
+            console.log(searchTerm)
+            term=searchTerm;
+            window.location.href =  "http://localhost/delivery-web/homepage.php?term=" + encodeURIComponent(term);
+          }
           function toggleMenu(){
               let subMenu = document.getElementById("subMenu");
               subMenu.classList.toggle("open-menu");
               console.log(45);
             }
-
-
+            // document.addEventListener('mousemove', handleMouseMove);
       </script>
       </body>
   </html>

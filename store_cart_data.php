@@ -36,12 +36,13 @@ function createProductBox($product)
     return $box;
 }
 
-if(!isset($_SESSION['a'])){
-    $cartData = $_SESSION['a'];
-    echo 45;
-}
 
-else{
+
+    // if(!isset($_SESSION['a'])){
+    //     $cartData = $_SESSION['a'];
+    //     echo 45;
+    // }
+
 if (isset($_POST['productId']) && isset($_POST['quantityValue'])) {
     $productId = $_POST['productId'];
     $quantityValue = $_POST['quantityValue'];
@@ -70,7 +71,7 @@ if (isset($_SESSION['cartData'])) {
     // }
 }
 
-}
+
 
 ?>
 
@@ -82,35 +83,32 @@ if (isset($_SESSION['cartData'])) {
     <head>
         <title>Fastest Delivery</title>
         <link rel="stylesheet" href="./css/style.css">
-        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!-- <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'> -->
     </head>
     <body>
         <header class="Logoo" >
 
             <div class="logo">SMART.</div>
         
-            <div class="search-bar">
-             <input type="text" placeholder="Search here"/>
-             <button>Search</button>
-            </div>
-        
             <div class="menu-header-icon">
         
                  <div class="wishlist-icon">
-                   <a href="wishlist.php"><img src="./images/heart.png" alt="" /></a>
-                   <span class="badge">2</span><br/>
-                   <p>Your Wishlist </p>
+                   <a href="homepage.php"><img src="./images/heart.png" alt="" /></a>
+                   <p>homepage</p>
                  </div>
             
                  <div class="Your-Cart-icon">
-                   <a href="cart.php"><img src="./images/cart.png" alt="" /></a>
-                   <span class="badge">3</span> <br/> 
-                   <p>Your Cart</p>  
+                   <a href="store_wish_data.php"><img src="./images/cart.png" alt="" /></a>
+                   <p>Your Wish</p>  
                  </div>
+
+
+
             </div>  
+
        </header>  
            <div class="navbar1">
-               <a href="index.php" class="hom">Home</a>
+               <a href="homepage.php" class="hom">Home</a>
                <a href="about.php">About</a>
                <a href="cart.php">Cart</a>
                <a href="wishlist.php">Wishlist</a>
@@ -121,7 +119,8 @@ if (isset($_SESSION['cartData'])) {
 
           <div class="top">
              <!-- <img src="./images/top_image.webp" alt="" /> -->
-             <button> <a href="">Proceed to payment</a></button>
+             <button> <a href="./payment.php">Proceed to payment</a></button><br><br>
+    
           </div> 
 
             <div class="navbar2">
@@ -132,14 +131,26 @@ if (isset($_SESSION['cartData'])) {
 
             
         <?php
-    
+
+    $_SESSION['temp_cart'] = "";
+
+
+        $total_cost=0;
+
         foreach ($cartData as $item) {        
     $productId = $item['productId'];
+    // echo $_SESSION['temp_cart'] ;
     $quantityValue = $item['quantityValue'];
+    // echo "as".$productId."as";
+    if(!is_null($productId) && !is_null($quantityValue)){
+    $_SESSION['temp_cart']= "$productId:$quantityValue," . $_SESSION['temp_cart'] ;
+    
+    }
+
     $query = "SELECT * FROM delivery_items where id= $productId";
     $result = $db->query($query);
-    
 
+    
     // echo "Product ID: $productId, Quantity Value: $quantityValue<br>";
             
             ?>
@@ -147,6 +158,7 @@ if (isset($_SESSION['cartData'])) {
             <?php while($row=$result->fetch_assoc()){?>
                 <div class="img_box">
                 <?php
+                            $total_cost = $total_cost + (float)$quantityValue *(float)$row['price'];
                             echo createProductBox($row);
                 ?>
                 </div>
@@ -160,7 +172,18 @@ if (isset($_SESSION['cartData'])) {
             <p>noting found</p>
     
             <?php }?>
-            <?php }?>              
+            <?php 
+            
+        }?>       
+        <?php
+        $_SESSION['temp_cart'] = substr($_SESSION['temp_cart'], 0, -1);
+        $_SESSION['total_cost'] = $total_cost;
+        
+        ?>
+
+        <div class="product-box " style="top: 20px; width:100%;height:20vw;text-align: center;background-color: #077c09;font-size: 2rem;">
+        <p class="price">Total Price: <?php echo $total_cost; ?></p>
+        </div>     
             <script>
 
 

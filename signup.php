@@ -11,6 +11,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["password"];
     $confirm_password = $_POST["confirm-password"];
 
+    // Check if a file was uploaded
+    if (isset($_FILES["add_image"]) && $_FILES["add_image"]["error"] == UPLOAD_ERR_OK) {
+        $file = $_FILES["add_image"];
+        $file_name = $file["name"];
+        $file_tmp = $file["tmp_name"];
+        $file_destination = "uploads/" . $file_name;
+
+        // Move the uploaded file to the uploads directory
+        if (move_uploaded_file($file_tmp, $file_destination)) {
+            // File upload successful
+            $timestamp = time(); // Get the current timestamp
+            $image_url = "/uploads/" . $file_name . "?v=" . $timestamp;
+        } else {
+            $error_message = "Error uploading the file.";
+            echo "<script>alert('$error_message');</script>";
+            return;
+        }
+    } else {
+        $image_url = null; // Set a default value if no file was uploaded
+    }
+
     // Validate the form data
     if (empty($fullname) || empty($email) || empty($phone) || empty($password) || empty($confirm_password)) {
         $error_message = "Please fill in all the required fields.";
@@ -32,13 +53,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<script>alert('$error_message');</script>";
         } else {
             // Prepare the SQL query
-            $stmt = $db->prepare("INSERT INTO customer (full_name, gmail, phone_number, user_password) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $fullname, $email, $phone, $password);
+            $stmt = $db->prepare("INSERT INTO customer (full_name, gmail, phone_number, user_password, image_url) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $fullname, $email, $phone, $password, $image_url);
 
             // Execute the query
             if ($stmt->execute()) {
-                // Redirect the user to the login page or display a success message
-                header("Location: /login");
+                // Pass the user data to the homepage.php file
+                header("Location: index.php");
                 exit;
             } else {
                 $error_message = "Error saving user data: " . $stmt->error;
@@ -60,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <h1>Sign Up</h1>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+        <form action="signup.php" method="post" enctype="multipart/form-data">
             <label for="fullname">Full Name:</label>
             <input type="text" id="fullname" name="fullname" required>
 
@@ -76,9 +97,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="confirm-password">Confirm Password:</label>
             <input type="password" id="confirm-password" name="confirm-password" required>
 
+            <label for="add_image">Add profile image:</label>
+            <input type="file" id="add_image" name="add_image" required>
+
             <input type="submit" value="Sign Up">
         </form>
-        <p>Already have an account? <a href="/delivery-web/login.php">Login here</a></p>
+        <p>Already have an account? <a href="/delivery-web/index.php">Login here</a></p>
     </div>
 </body>
 </html>
