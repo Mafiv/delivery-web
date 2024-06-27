@@ -9,14 +9,14 @@ $user_id = $user_data['id'];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form data
     $fullname = $_POST["fullname"];
-    $email = $_POST["email"];
+    $username = $_POST["username"];
     $phone = $_POST["phone"];
     $password = $_POST["password"];
     $confirm_password = $_POST["confirm-password"];
     $file_name = $_FILES["add_image"]["name"];
 
     // Validate the form data
-    if (empty($fullname) || empty($email) || empty($phone) || empty($password) || empty($confirm_password) || empty($file_name)) {
+    if (empty($fullname) || empty($username) || empty($phone) || empty($password) || empty($confirm_password) || empty($file_name)) {
         $error_message = "Please fill in all the required fields.";
         echo "<script>alert('$error_message');</script>";
     } elseif ($password !== $confirm_password) {
@@ -28,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $target_file = $target_dir . basename($file_name);
         if (move_uploaded_file($_FILES["add_image"]["tmp_name"], $target_file)) {
             $image_url = "/uploads/" . $file_name . "?v=" . time();
-            $stmt = $db->prepare("UPDATE customer SET full_name = ?, gmail = ?, phone_number = ?, user_password = ?, image_url = ? WHERE id = ?");
-            $stmt->bind_param("ssssss", $fullname, $email, $phone, $password, $image_url, $user_id);
+            $stmt = $db->prepare("UPDATE customer SET full_name = ?, username = ?, phone_number = ?, user_password = ?, image_url = ? WHERE id = ?");
+            $stmt->bind_param("ssssss", $fullname, $username, $phone, $password, $image_url, $user_id);
         } else {
             $error_message = "Error uploading the image.";
             echo "<script>alert('$error_message');</script>";
@@ -66,8 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="fullname">Full Name:</label>
             <input type="text" id="fullname" name="fullname" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="username">username:</label>
+            <input type="username" id="username" name="username" required>
 
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" required>

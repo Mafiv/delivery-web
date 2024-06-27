@@ -1,6 +1,5 @@
 <?php
-  require_once 'database_connection.php';
-  require_once './functions/fun.php';
+  require_once '../../database_connection.php';
   session_start();
  
 
@@ -14,22 +13,54 @@
   $password = $user_data['user_password'];
   $img_url=$user_data['image_url'];
 
-if (!isset($term)) {
+  if (!isset($term)) {
     $term = isset($_GET['term']) ? $_GET['term'] : '';  
 }
+
+
 $sql = "SELECT * FROM delivery_items WHERE item_name LIKE '%$term%' ORDER BY id DESC";
-$result = $db->query($sql);
-if (!isset($_SESSION['clickedButtonIds'])) {
+
+  $result = $db->query($sql);
+
+  function createProductBox($product)
+  {
+      $box = '<div class="product-box">';
+
+      $img = '<img src="data:image/jpg;charset=utf8;base64,' . base64_encode($product['image']) . '"/>';
+      $box .= $img;
+
+      $name = '<h5>' . $product['item_name'] . '</h5>';
+      $box .= $name;
+
+      $price = '<p class="price">Price: ' . $product['price'] . '</p>';
+      $box .= $price;
+
+      $rating = '<p class="rating">Rating: ';
+      $stars = '<span>' . str_repeat('&#9733;', $product['ratin']) . str_repeat('&#9734;', 5 - $product['ratin']) . '</span>';
+      $rating .= $stars;
+      $rating .= '</p>';
+      $box .= $rating;
+
+      $addToCartBtn = '<button id="btn' . $product['id'] . '" onclick="remove_from_cart(' . $product['id'] . ')">remove form website</button><br>';
+      $box .= $addToCartBtn;
+
+
+      $box .= '</div>';
+
+      return $box;
+  }
+
+  if (!isset($_SESSION['clickedButtonIds'])) {
       $_SESSION['clickedButtonIds'] = array();
-}
-?>
+  }
+  ?>
 
 
   <!DOCTYPE html>
   <html>
       <head>
           <title>Fastest Delivery</title>
-          <link rel="stylesheet" href="./css/style.css">
+          <link rel="stylesheet" href="../../css/style.css">
           <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
       </head>
       <body>
@@ -44,36 +75,31 @@ if (!isset($_SESSION['clickedButtonIds'])) {
           
               <div class="menu-header-icon">
           
-                  <div class="wishlist-icon">
-                    <a href="store_wish_data.php"><img src="./images/heart.png" alt="" /></a>
-                    <p>Your Wishlist </p>
+              <div class="wishlist-icon">
+                    <a href="view_employee.php"><img src="../../images/heart.png" alt="" /></a>
+                    <p>View Employees </p>
                   </div>
               
                   <div class="Your-Cart-icon">
-                    <a href="store_cart_data.php"><img src="./images/cart.png" alt="" /></a>
-                    <p>Your Cart</p>  
-                  </div>
-                  
-                  <div class="Your-Cart-icon">
-                    <a href="homepage.php"><img src="./images/home1.png" alt=""  /></a>
-                    <p>Home Page</p>  
+                    <a href="view_customer.php"><img src="../../images/cart.png" alt="" /></a>
+                    <p>View Customers</p>  
                   </div>
 
-
                   <div class="Your-Cart-icon">
-                   <a href="privious_cart.php"><img src="./images/cart.png" alt="" /></a> 
-                   <p>privous carts</p>  
+                   <a href="view_cart.php"><img src="../../images/cart.png" alt="" /></a> 
+                   <p>View Oreders</p>  
                  </div>
 
-                  <div class="Your-Cart-icon" onclick="toggleMenu()"z>
-                  <img src=".<?php echo $img_url; ?>"  class="user-pic" >
+                  <div class="Your-Cart-icon" onclick="toggleMenu()">
+                  <img src="../../<?php echo $img_url; ?>"  class="user-pic" >
     <p>Profile</p>
   </div>
 
   <div class="sub-menu-wrap" id="subMenu">
                       <div class="sub-menu">
                         <div class="user-info">
-                        <img src=".<?php echo $img_url; ?>" alt="">
+                        <img src="../../<?php echo $img_url; ?>" alt="">    
+                        
                           <h2><?php echo $full_name ?></h2>
                         </div>
                         <hr>
@@ -94,17 +120,16 @@ if (!isset($_SESSION['clickedButtonIds'])) {
                         </a>
                       </div>     
                   </div>
-  
-  
-
-                  
 
               </div>  
-        </header>      
+        </header>  
+            <div class="navbar1">  
+                <a href="homepage.php" class="hom">Home</a>
+                <a href="add_items.php" class="hom">add items</a>
+                <a href="add_employee.php" class="hom">add employee</a>
+            </div>    
 
-            <div class="top">
-             <img src="./images/top_image.webp" alt="" />
-          </div> 
+
 
             <div class="navbar2">
              <h1>New Products</h1><br><br>
@@ -126,7 +151,7 @@ if (!isset($_SESSION['clickedButtonIds'])) {
     
             <?php } 
             else{?>
-            <p>image not found</p>
+            <p>no item found</p>
     
             <?php }?>
 
@@ -135,46 +160,33 @@ if (!isset($_SESSION['clickedButtonIds'])) {
       
 
       <script>
-          function addToCart(productId) {
-              var cartBadge = document.getElementById(`quantity_${productId}`);
+
+
+          function remove_from_cart(productId) {
               var button_s=document.getElementById(`btn${productId}`)
-              button_s.textContent="added"
+              button_s.textContent="removed"
               button_s.style.backgroundColor='red'
-
-              let c=cartBadge.value;
-          
               var xhr = new XMLHttpRequest();
-              var ajaxUrl = 'store_cart_data.php';
-              xhr.open("POST", ajaxUrl, true);
-              xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-              xhr.send("productId=" + productId + "&quantityValue=" + c);
-              <?php $_SESSION['cartData'] = array();?>
-          }
+                xhr.open('POST', 'remove_from_cart.php', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+      // Handle the response from the server
+      window.location.href =  "http://localhost/delivery-web/organization%20side/Admin%20panel/homepage.php"
+                }   
+                };
+                xhr.send('product_id=' + encodeURIComponent(productId));        
+            
+                
+            }
 
-          function addToWish(productId){
-              var cartBadge = document.getElementById(`quantity_${productId}`);
-              var button_s=document.getElementById(`btn_w${productId}`)
-              button_s.textContent="added to wishList"
-              button_s.style.backgroundColor='red'
-
-              let c=cartBadge.value;
-          
-          var wish = new XMLHttpRequest();
-          var ajaxUrl = 'store_wish_data.php';
-          wish.open("POST", ajaxUrl, true);
-          wish.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          
-          wish.send("productId=" + productId + "&quantityValue=" + c);
-          <?php $_SESSION['wishData'] = array();?>
-              
-          }
 
           function performSearch() {
   
             var searchTerm = document.getElementById("searhing_term").value;
             console.log(searchTerm)
             term=searchTerm;
-            window.location.href =  "http://localhost/delivery-web/homepage.php?term=" + encodeURIComponent(term);
+            window.location.href =  "http://localhost/delivery-web/organization%20side/Admin%20panel/homepage.php?term=" + encodeURIComponent(term);
           }
           function toggleMenu(){
               let subMenu = document.getElementById("subMenu");

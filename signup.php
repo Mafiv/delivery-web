@@ -6,7 +6,7 @@ require_once 'database_connection.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the form data
     $fullname = $_POST["fullname"];
-    $email = $_POST["email"];
+    $username = $_POST["username"];
     $phone = $_POST["phone"];
     $password = $_POST["password"];
     $confirm_password = $_POST["confirm-password"];
@@ -33,28 +33,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Validate the form data
-    if (empty($fullname) || empty($email) || empty($phone) || empty($password) || empty($confirm_password)) {
+    if (empty($fullname) || empty($username) || empty($phone) || empty($password) || empty($confirm_password)) {
         $error_message = "Please fill in all the required fields.";
         echo "<script>alert('$error_message');</script>";
     } elseif ($password !== $confirm_password) {
         $error_message = "Passwords do not match.";
         echo "<script>alert('$error_message');</script>";
     } else {
-        // Check if the email is unique
-        $stmt = $db->prepare("SELECT COUNT(*) FROM customer WHERE gmail = ?");
-        $stmt->bind_param("s", $email);
+        // Check if the username is unique
+        $stmt = $db->prepare("SELECT COUNT(*) FROM customer WHERE username = ?");
+        $stmt->bind_param("s", $username);
         $stmt->execute();
-        $stmt->bind_result($email_count);
+        $stmt->bind_result($username_count);
         $stmt->fetch();
         $stmt->close();
 
-        if ($email_count > 0) {
-            $error_message = "Email already exists.";
+        if ($username_count > 0) {
+            $error_message = "username already exists.";
             echo "<script>alert('$error_message');</script>";
         } else {
             // Prepare the SQL query
-            $stmt = $db->prepare("INSERT INTO customer (full_name, gmail, phone_number, user_password, image_url) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $fullname, $email, $phone, $password, $image_url);
+            $stmt = $db->prepare("INSERT INTO customer (full_name, username, phone_number, user_password, image_url) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $fullname, $username, $phone, $password, $image_url);
 
             // Execute the query
             if ($stmt->execute()) {
@@ -85,8 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="fullname">Full Name:</label>
             <input type="text" id="fullname" name="fullname" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="username">username:</label>
+            <input type="username" id="username" name="username" required>
 
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" required>

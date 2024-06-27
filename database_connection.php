@@ -12,7 +12,7 @@ if($db->connect_error){
     die("connection failed  " .$db->connect_error);
 }
 else{
-    // die("here we go");
+    
 }
 
 ?>

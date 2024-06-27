@@ -28,7 +28,7 @@ function createProductBox($product)
 $session_id = $_SESSION['user_data']['id'];
 
 // Query the database to fetch the data from the cart table
-$sql = "SELECT * FROM cart WHERE cart_owner = ?";
+$sql = "SELECT * FROM cart WHERE cart_owner = ? ORDER BY id DESC";
 $stmt = $db->prepare($sql);
 $stmt->bind_param('i', $session_id);
 $stmt->execute();

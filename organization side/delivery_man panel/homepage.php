@@ -8,7 +8,7 @@
 
   // // Now you can access the user data in the $user_data array
   $full_name = $user_data['full_name'];
-  $email = $user_data['gmail'];
+  $email = $user_data['username'];
   $phone_number = $user_data['phone_number'];
   $password = $user_data['user_password'];
   $img_url=$user_data['image_url'];
@@ -70,6 +70,12 @@ $sql = "SELECT * FROM delivery_items WHERE item_name LIKE '%$term%' ORDER BY id 
               </div>
           
               <div class="menu-header-icon">
+                
+
+                  <div class="Your-Cart-icon">
+                    <a href="homepage.php"><img src="../images/home1.png" alt="" /></a>
+                    <p>Home Page</p>  
+                  </div>
 
                   <div class="Your-Cart-icon">
                     <a href="view_customer.php"><img src="../../images/cart.png" alt="" /></a>
@@ -95,17 +101,17 @@ $sql = "SELECT * FROM delivery_items WHERE item_name LIKE '%$term%' ORDER BY id 
                         </div>
                         <hr>
                         <a href="./help_support.php" class="sub-menu-link">
-                          <img src="profile/help.png" >
+                          <img src="../../images/profile/help.png" >
                           <p>Help & Support</p>
                           <span>></span>
                         </a>
                         <a href="./edit_profile.php" class="sub-menu-link">
-                          <img src="profile/profile.png" >
+                          <img src="../../images/profile/profile.png" >
                           <p>Edit Profile</p>
                           <span>></span>
                         </a>
                         <a href="./index.php" class="sub-menu-link">
-                          <img src="profile/logout.png" >
+                          <img src="../../images/profile/logout.png" >
                           <p>Logout</p>
                           <span>></span>
                         </a>
@@ -155,7 +161,7 @@ $sql = "SELECT * FROM delivery_items WHERE item_name LIKE '%$term%' ORDER BY id 
             var searchTerm = document.getElementById("searhing_term").value;
             console.log(searchTerm)
             term=searchTerm;
-            window.location.href =  "http://localhost/delivery-web/organization%20side/Admin%20panel/homepage.php?term=" + encodeURIComponent(term);
+            window.location.href =  "http://localhost/delivery-web/organization%20side/delivery_man%20panel/homepage.php?term=" + encodeURIComponent(term);
           }
           function toggleMenu(){
               let subMenu = document.getElementById("subMenu");

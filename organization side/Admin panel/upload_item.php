@@ -1,3 +1,48 @@
+<?php
+require_once '../../database_connection.php'; 
+
+$status = $statusMsg = '';
+
+try{
+if(isset($_POST["submit"])){
+    $status='error';
+    if(!empty($_FILES['image']['name'])){
+        $items_name = $_POST["name"];
+        $items_price = $_POST["price"];
+        $filename = basename($_FILES["image"]["name"]);
+        $filetype =pathinfo($filename,PATHINFO_EXTENSION);
+        $allowtypes=array('jpg','png','jpeg','gif');
+        if(in_array($filetype,$allowtypes)){
+            $image=$_FILES['image']['tmp_name'];
+            $image_content=addslashes(file_get_contents($image));
+            //insert image to db
+            $insert=$db->query("INSERT INTO delivery_items(item_name,price,image,created ) VALUES ('".$items_name."','".$items_price."' ,'".$image_content."',NOW())");
+            if($insert){
+                $status="sucess";
+                $statusMsg="File upload was sucessful";
+            }
+            else{
+                $statusMsg="File upload faild, please try again ";
+            }
+        }
+        else{
+            $statusMsg='please only register allowablw image formats';
+        }
+
+    }
+    else{
+        $statusMsg='plese enter the image for a file';
+    }
+
+}
+}
+catch(Error){
+    $statusMsg='Error occured';
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -47,7 +92,7 @@
           <hr>
           <a href="./help_support.php" class="sub-menu-link">
             <img src="profile/help.png" >
-            <p>Help & Supports</p>
+            <p>Help & Support</p>
             <span>></span>
           </a>
           <a href="./edit_profile.php" class="sub-menu-link">
@@ -70,49 +115,23 @@
   <a href="add_items.php" class="hom">add items</a>
 </div>    
 
-            <div class="navbar2">
-             <h1>Add Products</h1>
+          <div class="navbar2">
+    <h1>Products ADD</h1><br><br>
             </div>
 
-            <?php
-                if(!empty($statusMsg)){
-                    ?>
-                    <p class="status <?php echo $status ?>" > <?php echo $statusMsg; ?> </p>
-                    kl
-                <?php } ?>  
-
-
-
-            <form action="upload_item.php" method="POST" enctype="multipart/form-data">
-              <div class="input-container">
-                  <label for="name">Product Name:</label>
-                  <input type="text" id="name" name="name" required><br><br>
-      
-                  <label for="image">Image:</label>
-                  <input type="file" id="Image" name="image" accept="image/*" required><br><br>
-
-                  <label for="price">Price:</label>
-                  <input type="number" id="price" name="price" step="0.01" required>
-                  
-                  <input type="submit" name="submit" class="btn-primary" value="upload">
-                </div>
-      
-              
-          </form>
-          <style>
-            .input-container{
-height: 50vh;
-width: 40vw;
-text-align: center;
-margin: 2vw auto;
-background-color: #1a79de;
-font-size: 2rem;
-border-radius: 1rem;
-padding: 1rem;
-color: wheat;
-}
-          </style>
-                  
-
+    <div class="statusMsg">
+        <?php
+            if (!empty($statusMsg)) {
+                ?>
+                <p class="status <?php echo $status; ?>"><?php echo $statusMsg; ?></p>
+                <script>console.log('<?php echo $statusMsg; ?>');</script>
+                <?php
+            } else {
+                ?>
+                <p class="status <?php echo $status; ?>"><?php echo $statusMsg; ?></p>
+                <?php
+            }
+        ?>
+        </div>
 
     </body>

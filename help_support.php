@@ -161,7 +161,6 @@ footer {
           function toggleMenu(){
               let subMenu = document.getElementById("subMenu");
               subMenu.classList.toggle("open-menu");
-              console.log(45);
             }
 
       </script>

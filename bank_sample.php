@@ -37,6 +37,8 @@
             type="text"
             id="transfer-to-account-id"
             name="transfer-to-account-id"
+            placeholder="123456789"
+            value="123456789"
             required
           />
         </div>
