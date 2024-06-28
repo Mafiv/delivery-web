@@ -7,6 +7,7 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $error_message = "";
 
     // Fetch user data
     $stmt = $db->prepare("SELECT * FROM customer WHERE username=? AND user_password=?");
@@ -24,9 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: homepage.php");
         exit;
     } else {
-        echo "<script>
-              alert('Username or password is incorrect.');
-              </script>";
+        $error_message = "Username or password is incorrect";
     }
 
     $stmt->close();
@@ -50,11 +49,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
+            <?php
+               if (!empty($error_message)) {
+               echo "<p style='color: red; font-weight: bold; margin-top: 10px;'>$error_message</p>";
+                }
+            ?>
 
             <input type="submit" value="Login">
         </form>
         <!-- <p>Forgot your password? <a href="/forgot-password">Click here</a></p> -->
-        <p>Don't have an account? <a href="/delivery-web/Signup.php">Register here</a></p>
+        <p>Don't have an account? <a href="signup.php">Register here</a></p>
     </div>
 </body>
 </html>
