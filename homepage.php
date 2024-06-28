@@ -36,7 +36,7 @@ if (!isset($_SESSION['clickedButtonIds'])) {
           <header class="Logoo" >
 
               <!-- <div class="logo">SMART.</div> -->
-              <p>SMART delivery </p>
+              <h2>SMART delivery </h2>
               <div class="search-bar">
               <input id="searhing_term"type="text" placeholder="Search here"/>
               <button  onclick="performSearch()" >Search</button>
