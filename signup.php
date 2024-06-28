@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="fullname" name="fullname" required>
 
             <label for="username">username:</label>
-            <input type="username" id="username" name="username" required>
+            <input type="text" id="username" name="username" required>
 
             <label for="phone">Phone Number:</label>
             <input type="tel" id="phone" name="phone" required>
