@@ -127,7 +127,11 @@ if (isset($_SESSION['cartData'])) {
 
 </div>  
 </header>
-<button style="top: 20px; width:100%;height:5vw;text-align: center;"> <a href="./payment.php">Proceed to payment</a></button>   
+ <button style="top: 20px; width: 100%; height: 5vw; text-align: center; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1.2em; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: 0.3s;">
+  <a href="./payment.php" style="text-decoration: none; color: white; display: block; padding: 1em;">
+    Proceed to payment
+  </a> 
+ </button>
         <?php
 
     $_SESSION['temp_cart'] = "";
@@ -179,7 +183,7 @@ if (isset($_SESSION['cartData'])) {
         
         ?>
 
-        <div class="product-box " style="top: 20px; width:98%;height:10vw;text-align: center;border-radius:2rem;background-color: rgb(68, 238, 181);font-size: 2rem;">
+        <div class="product-box " style="top: 20px; width:98%;height:5vw;text-align: center;border-radius:2rem;background-color: rgb(68, 238, 181);font-size: 2rem;">
         <p class="price">Total Price: <?php echo $total_cost; ?></p>
         </div>     
             <script>
