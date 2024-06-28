@@ -55,7 +55,7 @@ if (!isset($_SESSION['clickedButtonIds'])) {
                   </div>
                   
                   <div class="Your-Cart-icon">
-                    <a href="homepage.php"><img src="./images/home1.png" alt=""  /></a>
+                    <a href="homepage.php"><img src="./images/home.png" alt=""  /></a>
                     <p>Home Page</p>  
                   </div>
 
@@ -78,17 +78,17 @@ if (!isset($_SESSION['clickedButtonIds'])) {
                         </div>
                         <hr>
                         <a href="./help_support.php" class="sub-menu-link">
-                          <img src="profile/help.png" >
+                          <img src="images/help.png" >
                           <p>Help & Support</p>
                           <span>></span>
                         </a>
                         <a href="./edit_profile.php" class="sub-menu-link">
-                          <img src="profile/profile.png" >
+                          <img src="images/profile.png" >
                           <p>Edit Profile</p>
                           <span>></span>
                         </a>
                         <a href="./index.php" class="sub-menu-link">
-                          <img src="profile/logout.png" >
+                          <img src="images/logout.png" >
                           <p>Logout</p>
                           <span>></span>
                         </a>
